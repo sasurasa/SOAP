@@ -633,42 +633,8 @@ def soap_batchlogrank(data, event, interval, batch):
     for i in batch:
         soap_logrank(data, event, interval, i)
 
-#Cox's proportional hazard analysis
 
-def soap_single_chr(data, event, interval, intervention):
-    from lifelines import CoxPHFitter
-    markers = []
-    markers.append(intervention)
-    markers.extend([interval, event])
-    data = data[markers] #Feature selection
 
-    cph = CoxPHFitter()
-    cph.fit(data, duration_col= interval, event_col=event)
-    summary = cph.summary
-    summary_table = summary[['exp(coef)','exp(coef) lower 95%', 'exp(coef) upper 95%']]
-    summary_table = summary_table.rename(columns={'exp(coef)': 'Hazard Ratio', 'exp(coef) lower 95%': '95%CI lower', 'exp(coef) upper 95%': '95%CI upper'}, errors="raise")
-
-    print(summary_table)
-
-#Batch Cox's regression
-def soap_batchcox(data, event, interval, batch):
-    for i in batch:
-        soap_single_chr(data, event, interval, i)
-        
-#Multivariable Cox's proportional hazard analysis
-def soap_multi_chr(data, event, interval, intervention_list):
-    from lifelines import CoxPHFitter
-    markers = intervention_list
-    markers.extend([interval, event])
-    data = data[markers] #Feature selection
-
-    cph = CoxPHFitter()
-    cph.fit(data, duration_col= interval, event_col=event)
-    summary = cph.summary
-    summary_table = summary[['exp(coef)','exp(coef) lower 95%', 'exp(coef) upper 95%']]
-    summary_table = summary_table.rename(columns={'exp(coef)': 'Hazard Ratio', 'exp(coef) lower 95%': '95%CI lower', 'exp(coef) upper 95%': '95%CI upper'}, errors="raise")
-
-    print(summary_table)
 
 
 
